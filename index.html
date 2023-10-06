@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitness Tracker</title>
+    <style>
+        /* Global Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url("https://images4.alphacoders.com/106/1068494.jpg"); /* Replace with your background image URL */
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: #007BFF;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+            border-radius: 5px;
+        }
+
+        main {
+            max-width: 400px;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+        }
+
+        h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-size: 24px;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input, button {
+            padding: 10px;
+            margin: 5px 0;
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        p {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+
+        /* Workout History Styles */
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .workout-date {
+            font-size: 12px;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Fitness Tracker</h1>
+    </header>
+    <main>
+        <section id="log-workout">
+            <h2>Log a Workout</h2>
+            <form id="workout-form">
+                <label for="exercise">Exercise:</label>
+                <input type="text" id="exercise" required>
+                <label for="duration">Duration (minutes):</label>
+                <input type="number" id="duration" required>
+                <button type="submit">Log Workout</button>
+            </form>
+        </section>
+        <section id="fitness-stats">
+            <h2>Fitness Statistics</h2>
+            <p>Total Workouts: <span id="total-workouts">0</span></p>
+            <p>Total Duration (minutes): <span id="total-duration">0</span></p>
+        </section>
+        <section id="fitness-history">
+            <h2>Workout History</h2>
+            <ul id="workout-list"></ul>
+        </section>
+    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const workoutForm = document.getElementById('workout-form');
+            const exerciseInput = document.getElementById('exercise');
+            const durationInput = document.getElementById('duration');
+            const totalWorkouts = document.getElementById('total-workouts');
+            const totalDuration = document.getElementById('total-duration');
+            const workoutList = document.getElementById('workout-list');
+
+            let workouts = [];
+            let totalDurationValue = 0;
+
+            workoutForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+
+                const exercise = exerciseInput.value;
+                const duration = parseInt(durationInput.value);
+
+                if (exercise && duration > 0) {
+                    const workout = { exercise, duration };
+                    workouts.push(workout);
+                    updateStats();
+                    displayWorkoutHistory();
+                    clearForm();
+                }
+            });
+
+            function updateStats() {
+                totalWorkouts.textContent = workouts.length;
+                totalDurationValue = workouts.reduce((total, workout) => total + workout.duration, 0);
+                totalDuration.textContent = totalDurationValue;
+            }
+
+            function clearForm() {
+                exerciseInput.value = '';
+                durationInput.value = '';
+            }
+
+            function displayWorkoutHistory() {
+                workoutList.innerHTML = '';
+                workouts.forEach((workout, index) => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <span>${workout.exercise}</span>
+                        <span>${workout.duration} min</span>
+                        <span class="workout-date">${new Date().toLocaleString()}</span>
+                    `;
+                    workoutList.appendChild(li);
+                });
+            }
+
+            // Initial display of workout history
+            displayWorkoutHistory();
+        });
+    </script>
+</body>
+</html>
+
